@@ -23,6 +23,10 @@ class GrowlReceiver(object):
         eventter.on_message(self.on_message)
 
     def on_message(self, title, message):
+        # Remove embedded newlines; let the Growl notifier do the wrapping.
+        # Note: Empty lines (i.e., paragraphs) are preserved.
+        message = ' '.join(['\n\n' if len(line) == 0 else line.strip()
+                                   for line in message.split('\n')])
         self.growl.notify(Growl.GROWL_NOTIFICATION, title, message)
 
         

@@ -18,6 +18,10 @@ class DbusReceiver(object):
         eventter.on_message(self.on_message)
 
     def on_message(self, title, message):
+        # Remove embedded newlines; let the Dbus notifier do the wrapping.
+        # Note: Empty lines (i.e., paragraphs) are preserved.
+        message = ' '.join(['\n\n' if len(line) == 0 else line.strip()
+                                   for line in message.split('\n')])
         app = 'DbusGeneric'
         self.interface.Notify(
             app,
